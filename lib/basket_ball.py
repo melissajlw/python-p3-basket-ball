@@ -1,3 +1,5 @@
+import math
+
 def game_dict():
     return {
         "home": {
@@ -182,3 +184,96 @@ def game_dict():
             ]
         }
     }
+
+# get_team_players
+# params: team, either home or away
+# returns: players from the team
+def get_team_players(team):
+    return game_dict()[team]["players"]
+
+# get_all_players
+# params: none
+# returns: players from both home and away teams
+def get_all_players():
+    return get_team_players("home") + get_team_players("away")
+
+# get_team
+# params: team name
+# returns: whether the team is home or away
+def get_team(team_name):
+    if game_dict()["home"]["team_name"] == team_name:
+        return "home"
+    elif game_dict()["away"]["team_name"] == team_name:
+        return "away"
+        
+# get_team_name
+# params: team, either home or away
+# returns: name of the team
+def get_team_name(team):
+    return game_dict()[team]["team_name"]
+
+# num_points_per_game
+# params: string of player name
+# returns: points per game
+def num_points_per_game(name):
+    player = player_stats(name)
+    return player["points_per_game"]
+
+# player_age
+# params: string of player name
+# returns: player's age
+def player_age(name):
+    player = player_stats(name)
+    return player["age"]
+
+# team_colors
+# params: team name
+# returns: list of team's colors
+def team_colors(team_name):
+    team = get_team(team_name)
+    return game_dict()[team]["colors"]
+    
+# team_names
+# params: none
+# returns: list of team names
+def team_names():
+    return [get_team_name("home"), get_team_name("away")]
+
+# player_numbers
+# params: team name
+# returns: player numbers of the team
+def player_numbers(team_name):
+    team = get_team(team_name)
+    players = get_team_players(team)
+    return [player["number"] for player in players]
+
+# player_stats
+# params: player name
+# returns: stats of the player
+def player_stats(name):
+    players = get_all_players()
+    for player in players:
+        if player["name"] == name:
+            return player
+
+# average_rebounds_by_shoe_brand
+# params: none
+# returns: list of average rebounds by shoe brand
+def average_rebounds_by_shoe_brand():
+    players = get_all_players()
+    rebound_data = dict()
+    shoe_rebounds = [[player["shoe_brand"], player["rebounds_per_game"]] for player in players]
+    for data in shoe_rebounds:
+        if data[0] not in rebound_data.keys():
+            rebound_data[data[0]] = []
+            rebound_data[data[0]].append(data[1])
+        else:
+            rebound_data[data[0]].append(data[1])
+            
+    for shoe_brand in rebound_data.keys():
+        rebound_data[shoe_brand] = sum(rebound_data[shoe_brand]) / len(rebound_data[shoe_brand])
+        print(f"{shoe_brand}:  {rebound_data[shoe_brand]:.2f}")
+       
+    # for result in rebound_data.keys():
+    #     print(f"{result}:  {rebound_data[result]:.2f}")
+
